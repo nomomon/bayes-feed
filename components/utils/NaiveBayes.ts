@@ -1,32 +1,21 @@
+import { Freq } from "../interface/Freq";
+import { Words } from "../interface/Words"
+import preprocess from "./Preprocess";
+
 const eta = 1e-4;
 
 export type c = "like" | "dislike";
-
-export type n_messages = {
-    like: number,
-    dislike: number
-}
-
-export type n_words = {
-    like: {
-        [key: string]: number
-    },
-    dislike: {
-        [key: string]: number
-    }
-};
-
 
 const sum = (arr: number[]) => {
     return arr.reduce((a, b) => a + b, eta);
 }
 
-const log_prior = (c: c, n_messages: n_messages) => {
+const log_prior = (c: c, n_messages: Freq) => {
     const vals = Object.values(n_messages)
     return Math.log(n_messages[c] / sum(vals));
 }
 
-const log_likelihood = (word: string, c: c, n_words: n_words, n_messages: n_messages) => {
+const log_likelihood = (word: string, c: c, n_words: Words, n_messages: Freq) => {
     if (n_words[c] && n_words[c].hasOwnProperty(word)) {
         const n_word = n_words[c][word] || 0;
         const n_c = n_messages[c];
@@ -39,7 +28,7 @@ const log_likelihood = (word: string, c: c, n_words: n_words, n_messages: n_mess
 }
 
 export const NaiveBayes = (
-    words: string[], n_messages: n_messages, n_words: n_words
+    words: string[], n_messages: Freq, n_words: Words
 ): number => {
     const log_p_like = log_prior("like", n_messages);
     const log_p_dislike = log_prior("dislike", n_messages);
@@ -59,3 +48,24 @@ export const NaiveBayes = (
 
     return p_like_words / (p_like_words + p_dislike_words);
 };
+
+const NaiveBayesScorer = (text: string, freq: Freq, words: Words) => {
+    const wordFreq = preprocess(text);
+    const textWords = [] as string[];
+
+    Object.keys(wordFreq).forEach(w => {
+        textWords.push(...Array(wordFreq[w]).fill(w))
+    })
+
+    const score = NaiveBayes(
+        textWords,
+        freq,
+        words
+    );
+
+    if (!score) return 0;
+
+    return score;
+}
+
+export default NaiveBayesScorer;

@@ -1,10 +1,12 @@
 import { Card, CardActions, CardContent, CardMedia, IconButton, Tooltip, Typography } from "@mui/material";
-import { Delete, Info, Share } from "@mui/icons-material"
-import { useState } from "react";
+import { Info } from "@mui/icons-material"
+import { FC, useState } from "react";
 import ReactionButton from "../ReactionButton";
 import Link from "next/link";
 import { RawPost } from "../interface/RawPost";
-import { setScore } from "../backend";
+import { DataProviderInterface, WithData } from "../providers/DataProvider";
+import preprocess from "../utils/Preprocess"
+import { Score } from "../interface/Score";
 
 const READ_MORE = {
     en: "Read more",
@@ -13,7 +15,7 @@ const READ_MORE = {
 
 interface PostInterface extends RawPost { }
 
-const Post = ({
+const Post: FC<PostInterface & DataProviderInterface> = ({
     link,
     postName,
     postDescription,
@@ -21,14 +23,24 @@ const Post = ({
     sourceName,
     lang,
     score,
-}: PostInterface) => {
+    reactToPost
+}) => {
     const [reaction, setReaction] = useState(0);
 
-    const text = postName + " " + postDescription;
 
     const handleReactionClick = async (reaction: number) => {
-        await setScore(text, String(reaction))
-            .then(r => r.status === 200 && setReaction(reaction));
+        const text = postName + " " + postDescription;
+
+        const wordFreq = preprocess(text);
+        const score = {
+            like: Number(reaction == 1),
+            dislike: Number(reaction == -1)
+        } as Score;
+
+        reactToPost(
+            wordFreq,
+            score
+        ).then(() => setReaction(reaction))
     }
 
     return (
@@ -110,4 +122,4 @@ const Post = ({
     );
 }
 
-export default Post;
+export default WithData(Post);
