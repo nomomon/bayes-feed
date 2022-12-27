@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { RawPost } from '../../components/interface/RawPost';
 import Parser from 'rss-parser';
-import { getImageSrc, getScore } from '../../components/backend';
+import { getImageSrc } from '../../components/backend';
 
 const parser = new Parser();
 
-const rss = [
+const rss: string[] = [
     // 'https://www.reddit.com/r/nextjs/.rss',
     // 'https://www.reddit.com/r/reactjs/.rss',
     // 'https://medium.com/feed/@will-carter',
-    // 'https://habr.com/ru/rss/all/all/?fl=ru',
+    'https://habr.com/ru/rss/all/all/?fl=ru',
     'https://habr.com/ru/rss/feed/posts/all/089201e53df20f692f1c6dd842ecc29a/?fl=ru'
 ];
 
@@ -73,7 +73,6 @@ const parseRSS = async (rss: string): Promise<RawPost[]> => {
                 const lang = description.match(/[а-яА-ЯёЁ]/) ? 'ru' : 'en';
 
                 const imageSrc = await getImageSrc(link);
-                const score = await getScore(description);
 
                 const post = {
                     sourceName: sourceName,
@@ -82,7 +81,7 @@ const parseRSS = async (rss: string): Promise<RawPost[]> => {
                     postDescription: description,
                     imageSrc: imageSrc,
                     lang: lang,
-                    score: score
+                    score: 0
                 };
                 output.push(post);
             }

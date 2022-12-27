@@ -5,5 +5,5 @@ export type RawPost = {
     imageSrc: string;
     sourceName?: string;
     lang: string;
-    score: string;
+    score: number;
 }

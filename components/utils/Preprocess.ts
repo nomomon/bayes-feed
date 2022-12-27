@@ -2,6 +2,7 @@ import { Stopwords } from "../interface/Stopwords";
 import { Lemmatizer } from "../interface/Lemmatizer";
 import makeStopwords from "./MakeStopwords";
 import makeLemmatizer from "./MakeLemmatizer";
+import { WordFreq } from "../interface/WordFreq";
 
 const cleanChars = (text: string) => {
     return text.replace(/[^а-яА-Яa-zA-Z\s]/g, " ").toLowerCase();
@@ -32,9 +33,7 @@ const lemmatizer: Lemmatizer = makeLemmatizer()
 
 const preprocess = (
     text: string
-): {
-    [key: string]: number
-} => {
+): WordFreq => {
     let cleanText = cleanChars(text);
     let words = cleanText.split(" ");
     words = words.filter(word => word.length >= 1);
