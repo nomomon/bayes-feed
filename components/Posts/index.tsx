@@ -1,6 +1,5 @@
-import { Alert, Box, CircularProgress, Stack, Typography } from "@mui/material";
+import { Alert, Box, CircularProgress, Stack } from "@mui/material";
 import { FC } from "react";
-import { RawPost } from "../interface/RawPost";
 import Post from "../Post";
 import { DataProviderInterface, WithData } from "../providers/DataProvider";
 
@@ -8,12 +7,17 @@ interface PostsProps {
     loading: boolean;
 }
 
-const Posts: FC<PostsProps & DataProviderInterface> = ({ posts, loading }) => {
+const Posts: FC<PostsProps & DataProviderInterface> = ({ posts, loading, freq }) => {
     return (
         <Stack
             spacing={3}
             sx={{ my: 2 }}
         >
+            {
+                <Alert typeof="info">
+                    {Object.entries(freq).join(" ")}
+                </Alert>
+            }
             {
                 posts.map((post) => (
                     <Post

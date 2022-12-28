@@ -11,8 +11,13 @@ const sum = (arr: number[]) => {
 }
 
 const log_prior = (c: c, n_messages: Freq) => {
-    const vals = Object.values(n_messages)
-    return Math.log(n_messages[c] / sum(vals));
+
+    const vals = Object.values(n_messages);
+    const lp = Math.log(n_messages[c] / sum(vals));
+
+    console.warn(">> ", c, n_messages, vals, lp);
+
+    return lp;
 }
 
 const log_likelihood = (word: string, c: c, n_words: Words, n_messages: Freq) => {
@@ -37,7 +42,7 @@ export const NaiveBayes = (
         words.map(words => log_likelihood(words, "like", n_words, n_messages))
     );
     const log_p_words_dislike = sum(
-        words.map(words => log_likelihood(words, "like", n_words, n_messages))
+        words.map(words => log_likelihood(words, "dislike", n_words, n_messages))
     );
 
     const log_p_like_words = log_p_like + log_p_words_like;
@@ -46,7 +51,8 @@ export const NaiveBayes = (
     const p_like_words = Math.exp(log_p_like_words);
     const p_dislike_words = Math.exp(log_p_dislike_words);
 
-    return p_like_words / (p_like_words + p_dislike_words);
+    // return Number(p_like_words > p_dislike_words);
+    return p_like_words / (p_like_words + p_dislike_words)
 };
 
 const NaiveBayesScorer = (text: string, freq: Freq, words: Words) => {
@@ -56,6 +62,10 @@ const NaiveBayesScorer = (text: string, freq: Freq, words: Words) => {
     Object.keys(wordFreq).forEach(w => {
         textWords.push(...Array(wordFreq[w]).fill(w))
     })
+
+    console.log(textWords,
+        freq,
+        words)
 
     const score = NaiveBayes(
         textWords,

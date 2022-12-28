@@ -2,10 +2,10 @@ import type { NextPage } from 'next'
 import { Container, Typography } from '@mui/material';
 import Posts from '../components/Posts';
 import { DataProvider } from '../components/providers/DataProvider';
-import makeSureUserIsLoggedIn from '../components/utils/MakeSureUserIsLoggedIn';
+import useUserIsLoggedIn from '../components/utils/useUserIsLoggedIn';
 
 const Home: NextPage = () => {
-    makeSureUserIsLoggedIn();
+    useUserIsLoggedIn();
     return (
         <DataProvider>
             <Container
