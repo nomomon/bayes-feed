@@ -1,5 +1,5 @@
 import { createContext, FC, ReactNode, useEffect, useState } from "react";
-import { getUserFreq, getUserWords, patchUserFreq, patchUserWords } from "../firebase";
+import { auth, getUserFreq, getUserWords, patchUserFreq, patchUserWords } from "../firebase";
 import { Freq } from "../interface/Freq";
 import { RawPost } from "../interface/RawPost";
 import { Score } from "../interface/Score";
@@ -42,25 +42,33 @@ export const DataProviderCls: FC<DataProviderProps> = ({
     }, [])
 
     useEffect(() => {
-        if (loading) {
+        if (loading && auth.currentUser) {
             fetch("/api/posts")
                 .then((res) => res.json())
                 .then((newPosts: RawPost[]) => {
                     setPosts((p) => [
                         ...p,
                         ...newPosts
-                            .map(post => {
-                                const text = post.postName + " " + post.postDescription;
-                                post.score = NaiveBayesScorer(text, freq, words);
-                                return post;
-                            })
-                            .sort((a, b) => b.score - a.score)
-                    ]);
+                    ].filter((post, i, self) =>
+                        self.findIndex(p => p.link === post.link) === i
+                    ));
                     setLoading(false);
                 })
                 .catch((err) => console.error(err))
         }
-    }, [words, freq, loading])
+    }, [words, freq, loading, auth.currentUser])
+
+    useEffect(() => {
+        if (posts.length > 0 && posts[0].score == null) {
+            setPosts((p) => {
+                return p.map(post => {
+                    const text = post.postName + " " + post.postDescription;
+                    post.score = NaiveBayesScorer(text, freq, words);
+                    return post;
+                }).sort((a, b) => (b.score || 0) - (a.score || 0))
+            })
+        }
+    }, [words, freq, posts])
 
     // funcs to update data
     const reactToPost = async (wordFreq: WordFreq, score: Score) => {

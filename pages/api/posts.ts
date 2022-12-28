@@ -10,7 +10,7 @@ const rss: string[] = [
     // 'https://www.reddit.com/r/reactjs/.rss',
     // 'https://medium.com/feed/@will-carter',
     'https://habr.com/ru/rss/all/all/?fl=ru',
-    // 'https://habr.com/ru/rss/feed/posts/all/089201e53df20f692f1c6dd842ecc29a/?fl=ru'
+    'https://habr.com/ru/rss/feed/posts/all/089201e53df20f692f1c6dd842ecc29a/?fl=ru'
 ];
 
 export default async function handler(
@@ -72,7 +72,8 @@ const parseRSS = async (rss: string): Promise<RawPost[]> => {
 
                 const lang = description.match(/[а-яА-ЯёЁ]/) ? 'ru' : 'en';
 
-                const imageSrc = await getImageSrc(link);
+                // const imageSrc = await getImageSrc(link);
+                const imageSrc = "";
 
                 const post = {
                     sourceName: sourceName,
@@ -81,7 +82,7 @@ const parseRSS = async (rss: string): Promise<RawPost[]> => {
                     postDescription: description,
                     imageSrc: imageSrc,
                     lang: lang,
-                    score: 0
+                    score: null
                 };
                 output.push(post);
             }
