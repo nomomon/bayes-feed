@@ -15,8 +15,6 @@ const log_prior = (c: c, n_messages: Freq) => {
     const vals = Object.values(n_messages);
     const lp = Math.log(n_messages[c] / sum(vals));
 
-    console.warn(">> ", c, n_messages, vals, lp);
-
     return lp;
 }
 
@@ -48,11 +46,11 @@ export const NaiveBayes = (
     const log_p_like_words = log_p_like + log_p_words_like;
     const log_p_dislike_words = log_p_dislike + log_p_words_dislike;
 
-    const p_like_words = Math.exp(log_p_like_words);
-    const p_dislike_words = Math.exp(log_p_dislike_words);
+
+    const approx_p = log_p_dislike_words / (log_p_like_words + log_p_dislike_words);
 
     // return Number(p_like_words > p_dislike_words);
-    return p_like_words / (p_like_words + p_dislike_words)
+    return approx_p;
 };
 
 const NaiveBayesScorer = (text: string, freq: Freq, words: Words) => {
@@ -62,10 +60,6 @@ const NaiveBayesScorer = (text: string, freq: Freq, words: Words) => {
     Object.keys(wordFreq).forEach(w => {
         textWords.push(...Array(wordFreq[w]).fill(w))
     })
-
-    console.log(textWords,
-        freq,
-        words)
 
     const score = NaiveBayes(
         textWords,
