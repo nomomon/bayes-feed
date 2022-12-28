@@ -43,7 +43,7 @@ const GetFeed = async (rss: string | string[]) => {
     }
 
     for (let i = 0; i < rss.length; i++) {
-        await parseRSS(rss[i])
+        await parseRSS(`https://nextjs-cors-anywhere.vercel.app/api?endpoint=${rss[i]}`)
             .then(posts => feed.push(...posts))
     }
 
