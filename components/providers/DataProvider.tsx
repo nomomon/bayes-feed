@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createContext, FC, ReactNode, useEffect, useState } from "react";
 import { auth, getUserFreq, getUserWords, patchUserFreq, patchUserWords } from "../firebase";
 import { Freq } from "../interface/Freq";
@@ -6,6 +7,9 @@ import { Score } from "../interface/Score";
 import { WordFreq } from "../interface/WordFreq";
 import { Words } from "../interface/Words";
 import NaiveBayesScorer from "../utils/NaiveBayes";
+import { fetchBuilder, MemoryCache } from 'node-fetch-cache';
+
+const fetch = fetchBuilder.withCache(new MemoryCache({ ttl: 60 * 60 * 1000 }));
 
 export const DataContext = createContext({});
 
@@ -54,7 +58,6 @@ export const DataProviderCls: FC<DataProviderProps> = ({
                     ));
                     setLoading(false);
                 })
-                .catch((err) => console.error(err))
         }
     }, [words, freq, loading, auth.currentUser])
 
