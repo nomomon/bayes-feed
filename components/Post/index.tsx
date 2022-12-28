@@ -95,11 +95,9 @@ const Post: FC<PostInterface & DataProviderInterface> = ({
                         fontSize: 14,
                     }}
                 >
-                    <a>
-                        <Link href={link}>
-                            {(lang === "en") ? READ_MORE.en : READ_MORE.ru}
-                        </Link>
-                    </a>
+                    <Link href={link}>
+                        {(lang === "en") ? READ_MORE.en : READ_MORE.ru}
+                    </Link>
                 </Typography>
             </CardContent>
             <CardActions>
