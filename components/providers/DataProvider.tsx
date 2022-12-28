@@ -31,23 +31,8 @@ export const DataProviderCls: FC<DataProviderProps> = ({
     const [loading, setLoading] = useState<boolean>(true);
 
     // load the data
+
     useEffect(() => {
-        if (loading && posts.length === 0) {
-            fetch("/api/posts")
-                .then((res) => res.json())
-                .then((newPosts: RawPost[]) => {
-                    setPosts([
-                        ...newPosts,
-                        ...posts
-                    ].map(post => {
-                        const text = post.postName + " " + post.postDescription;
-                        post.score = NaiveBayesScorer(text, freq, words);
-                        return post;
-                    }).sort((a, b) => b.score - a.score));
-                    setLoading(false);
-                })
-                .catch((err) => console.error(err))
-        }
         getUserWords().then(words => {
             setWords(words)
         })
@@ -55,6 +40,27 @@ export const DataProviderCls: FC<DataProviderProps> = ({
             setFreq(freq)
         })
     }, [])
+
+    useEffect(() => {
+        if (loading) {
+            fetch("/api/posts")
+                .then((res) => res.json())
+                .then((newPosts: RawPost[]) => {
+                    setPosts((p) => [
+                        ...p,
+                        ...newPosts
+                            .map(post => {
+                                const text = post.postName + " " + post.postDescription;
+                                post.score = NaiveBayesScorer(text, freq, words);
+                                return post;
+                            })
+                            .sort((a, b) => b.score - a.score)
+                    ]);
+                    setLoading(false);
+                })
+                .catch((err) => console.error(err))
+        }
+    }, [words, freq, loading])
 
     // funcs to update data
     const reactToPost = async (wordFreq: WordFreq, score: Score) => {
