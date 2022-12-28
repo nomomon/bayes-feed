@@ -7,9 +7,6 @@ import { Score } from "../interface/Score";
 import { WordFreq } from "../interface/WordFreq";
 import { Words } from "../interface/Words";
 import NaiveBayesScorer from "../utils/NaiveBayes";
-import { fetchBuilder, MemoryCache } from 'node-fetch-cache';
-
-const fetch = fetchBuilder.withCache(new MemoryCache({ ttl: 60 * 60 * 1000 }));
 
 export const DataContext = createContext({});
 
