@@ -1,0 +1,23 @@
+{
+    "name": "Naive Bayes RSS Feed",
+    "short_name": "Bayes Feed",
+    "theme_color": "#ffffff",
+    "background_color": "#004740",
+    "display": "fullscreen",
+    "orientation": "portrait",
+    "scope": "/",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "icons/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-1024x1024.png",
+            "sizes": "1024x1024",
+            "type": "image/png"
+        }
+    ],
+    "splash_pages": null
+}
