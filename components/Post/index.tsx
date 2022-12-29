@@ -95,8 +95,10 @@ const Post: FC<PostInterface & DataProviderInterface> = ({
                         fontSize: 14,
                     }}
                 >
-                    <Link href={link}>
-                        {(lang === "en") ? READ_MORE.en : READ_MORE.ru}
+                    <Link href={link} legacyBehavior>
+                        <a target="_blank" rel="noopener noreferrer">
+                            {(lang === "en") ? READ_MORE.en : READ_MORE.ru}
+                        </a>
                     </Link>
                 </Typography>
             </CardContent>
