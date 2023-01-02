@@ -1,7 +1,5 @@
 # Bayes Feed (Web)
 
-![Feed overview](assets/feed-overview.jpg)
-
 RSS feed with a Naïve Bayes classifier that learns from your reactions. You like or dislike posts; the algorithm predicts what you'll enjoy and gets better over time.
 
 **This repo is the web app.** There is also an Android app: **[bayes-feed-android](https://github.com/nomomon/bayes-feed-android)**.
@@ -13,8 +11,6 @@ RSS feed with a Naïve Bayes classifier that learns from your reactions. You lik
 ## What it does
 
 Aggregates posts from RSS feeds, runs the text through a Naïve Bayes model to predict "like" vs "dislike," and lets you react with thumbs up/down. Your reactions update the model in Firestore so predictions improve as you use it.
-
-![Single post card](assets/post-example.jpg)
 
 ## Tech
 
@@ -47,5 +43,10 @@ I tried a Telegram bot first and hit a lot of errors. Then PocketBase for the ba
 One caveat on this web app: Firebase read usage can hit limits if you're not careful. Storing all word counts in a single document is one way to cut down reads; I didn't get to that here.
 
 ---
+
+<p align="center">
+  <img src="assets/feed-overview.jpg" width="320" alt="Feed overview">
+  <img src="assets/post-example.jpg" width="320" alt="Post card">
+</p>
 
 *MIT*
